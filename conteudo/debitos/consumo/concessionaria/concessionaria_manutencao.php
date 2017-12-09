@@ -1,0 +1,1314 @@
+<?php
+	class concessionaria_manutencao{
+		var $resultado;
+		var $registros;
+		
+		function concessionaria_manutencao(){$this->con = new conexao();}
+		
+		function consultar_concessionaria1(){
+			$filtro = @$_REQUEST['pesquisa'];			
+			if($filtro == '')@$filtrar_por == '';else@$filtrar_por = $filtro;
+
+			$sql = "SELECT 
+			CAP_CONS_CODIGO,
+			UPPER(CAP_CONS_EMPRESA ) AS CAP_CONS_EMPRESA
+			FROM contasapagarconcessionarias";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		
+		function atualizar_concessionaria2(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			FROM concessionarias
+			ORDER BY CONS_EMPRESA";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		
+		function consultar_concessionaria2(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_EMPRESA LIKE '".@$_REQUEST['empresa']."'
+			order by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+
+		function excluir_concessionaria1(){
+			$sql = "delete from contasapagarconcessionarias where CAP_CONS_CODIGO =".$_REQUEST['codigo'];
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Cadastro excluido com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar excluir o cadastro!");
+						return false;
+				}
+		}
+		function excluir_concessionaria2(){
+			$sql = "delete from concessionarias where CONS_CODIGO =".$_REQUEST['codigo'];
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Cadastro excluido com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar excluir o cadastro!");
+						return false;
+				}
+		}
+		
+		function alterar_concessionaria1(){
+			$sql = "select * from contasapagarconcessionarias where CAP_CONS_CODIGO =".$_REQUEST['codigo'];
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+		}
+		function alterar_concessionaria2(){
+			$sql = "select * from concessionarias where CONS_CODIGO =".$_REQUEST['codigo'];
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+		}
+		
+		function modificar_concessionaria1(){
+			$dt = date('d/m/Y');
+			$hr = gmDate('H:i:s', strtotime("-3 hours"));	
+			$data_hora = "$dt - $hr";
+			
+			$sql = "update contasapagarconcessionarias 
+			set CAP_CONS_EMPRESA 	= '".$_POST['CAP_CONS_EMPRESA']."' 	
+			where CAP_CONS_CODIGO 	= ".$_REQUEST['codigo'];
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Debito alterado com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar alterar o debito!");
+						return false;
+				}
+		}		
+		function modificar_concessionaria2(){
+			$dt = date('d/m/Y');
+			$hr = gmDate('H:i:s', strtotime("-3 hours"));	
+			$data_hora = "$dt - $hr";
+			
+			$sql = "update concessionarias set 
+			
+			CONS_EMPRESA   = '".$_POST['CAP_CONS_EMPRESA']."', 
+			CONS_CODBARBL1 = '".$_POST['CAP_CONS_CODBARBL1']."', 
+			CONS_CODBARBL2 = '".$_POST['CAP_CONS_CODBARBL2']."', 
+			CONS_CODBARBL3 = '".$_POST['CAP_CONS_CODBARBL3']."', 
+			CONS_CODBARBL4 = '".$_POST['CAP_CONS_CODBARBL4']."', 
+			CONS_CODBARBL5 = '".$_POST['CAP_CONS_CODBARBL5']."', 
+			CONS_CODBARBL6 = '".$_POST['CAP_CONS_CODBARBL6']."', 
+			CONS_CODBARBL7 = '".$_POST['CAP_CONS_CODBARBL7']."', 
+			CONS_CODBARBL8 = '".$_POST['CAP_CONS_CODBARBL8']."', 
+			
+			CONS_VALOR = '".$_POST['CAP_CONS_VALOR']."', 
+			
+			CONS_DTD_EMIS = '".$_POST['CAP_CONS_DTD_EMIS']."', 
+			CONS_DTM_EMIS = '".$_POST['CAP_CONS_DTM_EMIS']."', 
+			CONS_DTA_EMIS = '".$_POST['CAP_CONS_DTA_EMIS']."', 
+			
+			CONS_DTD_VENC = '".$_POST['CAP_CONS_DTD_VENC']."', 
+			CONS_DTM_VENC = '".$_POST['CAP_CONS_DTM_VENC']."', 
+			CONS_DTA_VENC = '".$_POST['CAP_CONS_DTA_VENC']."', 
+			
+			CONS_TIPO = '".$_POST['CAP_CONS_TIPO']."', 
+			
+			CONS_STATUS = '".$_POST['CAP_CONS_STATUS']."', 
+			CONS_DT_ALT = '".$data_hora."'
+			
+			where CONS_CODIGO	 = ".$_REQUEST['codigo'];
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Debito alterado com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar alterar o debito!");
+						return false;
+				}
+		}
+
+		function gravar_concessionaria1(){
+			$dt = date('d/m/Y');
+			$hr = gmDate('H:i:s', strtotime("-3 hours"));	
+			$data_hora = "$dt - $hr";
+		
+			$sql = "insert into contasapagarconcessionarias (CAP_CONS_EMPRESA) values ('".$_REQUEST['CAP_CONS_EMPRESA']."')";
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Debito cadastro com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar cadastrar o debito!");
+						return false;
+				}
+		}		
+		function gravar_concessionaria2(){
+			$dt = date('d/m/Y');
+			$hr = gmDate('H:i:s', strtotime("-3 hours"));	
+			$data_hora = "$dt - $hr";
+		
+			$sql = "insert into concessionarias (
+			CONS_EMPRESA, 
+			CONS_CODBARBL1, 
+			CONS_CODBARBL2, 
+			CONS_CODBARBL3, 
+			CONS_CODBARBL4, 
+			CONS_CODBARBL5, 
+			CONS_CODBARBL6, 
+			CONS_CODBARBL7, 
+			CONS_CODBARBL8, 
+			
+			CONS_VALOR, 
+			
+			CONS_DTD_EMIS, 
+			CONS_DTM_EMIS, 
+			CONS_DTA_EMIS, 
+			
+			CONS_DTD_VENC, 
+			CONS_DTM_VENC, 
+			CONS_DTA_VENC, 
+
+			CONS_TIPO, 
+			
+			CONS_STATUS, 
+			CONS_DT_CAD) 
+			values ('".
+			
+			$_REQUEST['CAP_CONS_EMPRESA']."','".
+			$_REQUEST['CAP_CONS_CODBARBL1']."','".
+			$_REQUEST['CAP_CONS_CODBARBL2']."','".
+			$_REQUEST['CAP_CONS_CODBARBL3']."','".
+			$_REQUEST['CAP_CONS_CODBARBL4']."','".
+			$_REQUEST['CAP_CONS_CODBARBL5']."','".
+			$_REQUEST['CAP_CONS_CODBARBL6']."','".
+			$_REQUEST['CAP_CONS_CODBARBL7']."','".
+			$_REQUEST['CAP_CONS_CODBARBL8']."','".
+			
+			$_REQUEST['CAP_CONS_VALOR']."','".
+			
+			$_REQUEST['CAP_CONS_DTD_EMIS']."','".
+			$_REQUEST['CAP_CONS_DTM_EMIS']."','".
+			$_REQUEST['CAP_CONS_DTA_EMIS']."','".
+			
+			$_REQUEST['CAP_CONS_DTD_VENC']."','".
+			$_REQUEST['CAP_CONS_DTM_VENC']."','".
+			$_REQUEST['CAP_CONS_DTA_VENC']."','".
+			
+			$_REQUEST['CAP_CONS_TIPO']."','".
+			
+			$_REQUEST['CAP_CONS_STATUS']."',
+			'".$data_hora."')";
+			
+				if($this->resultado = $this->con->banco->Execute($sql)){
+					alerta("Debito cadastro com sucesso!");
+						return true;
+				}
+				else{
+					alerta("Ocorreu um erro ao tentar cadastrar o debito!");
+						return false;
+				}
+		}
+
+		function total1(){
+			$sql = "select COUNT(*) as TOTAL1 from contasapagarconcessionarias";
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+			return $this->registros->TOTAL1;
+		}
+		function total2(){
+			$sql = "select COUNT(*) as TOTAL2 
+			from concessionarias 
+			WHERE CONS_EMPRESA LIKE '".@$_REQUEST['empresa']."' ";
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+			return $this->registros->TOTAL2;
+		}
+
+		function media(){
+			$sql = "select CONCAT( 'R$ ', AVG(CONS_VALOR)) as MEDIA 
+			from concessionarias 
+			WHERE CONS_EMPRESA LIKE '".@$_REQUEST['empresa']."' ";
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+			return $this->registros->MEDIA;
+		}
+		function soma(){
+			$sql = "select CONCAT( 'R$ ', SUM(CONS_VALOR)) as SOMA 
+			from concessionarias
+			WHERE CONS_EMPRESA LIKE '".@$_REQUEST['empresa']."' ";
+			$this->resultado = $this->con->banco->Execute($sql);
+			$this->registros = $this->resultado->FetchNextObject();
+			return $this->registros->SOMA;
+		}
+	
+		function cd01(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '01'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd02(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '02'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd03(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '03'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd04(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '04'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}		
+		function cd05(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '05'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd06(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '06'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd07(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '07'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd08(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '08'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd09(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '09'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd10(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '10'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd11(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '11'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd12(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '12'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd13(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '13'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd14(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '14'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd15(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '15'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd16(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '16'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd17(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '17'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd18(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '18'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd19(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '19'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd20(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '20'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd21(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '21'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd22(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '22'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd23(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '23'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd24(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '24'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd25(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '25'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd26(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '26'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd27(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '27'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cd28(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '28'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd29(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '29'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd30(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '30'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		function cd31(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTD_VENC = '31'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}
+		
+		function cm01(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '01'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}		
+		function cm02(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '02'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm03(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '03'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm04(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '04'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm05(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '05'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm06(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '06'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm07(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '07'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		function cm08(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '08'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm09(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '09'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm10(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '10'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm11(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '11'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function cm12(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTM_VENC = '12'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}	
+		
+		function ca2012(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2012'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}			
+		function ca2013(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2013'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2014(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2014'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2015(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2015'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2016(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2016'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2017(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2017'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2018(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2018'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2019(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2019'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2020(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2020'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2021(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2021'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2022(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2022'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+		function ca2023(){
+			$sql = "SELECT 
+			CONS_CODIGO,
+			UPPER(CONS_EMPRESA) AS CONS_EMPRESA,
+			CONCAT( CONS_DTD_EMIS, '/', CONS_DTM_EMIS, '/', CONS_DTA_EMIS) AS CONS_DTA_EMIS,
+			CONCAT( CONS_DTD_VENC, '/', CONS_DTM_VENC, '/', CONS_DTA_VENC) AS CONS_DTA_VENC,
+			
+			CONCAT( CONS_CODBARBL1, '.', CONS_CODBARBL2) AS CONS_CODBARBL2,
+			CONCAT( CONS_CODBARBL3, '.', CONS_CODBARBL4) AS CONS_CODBARBL4,
+			CONCAT( CONS_CODBARBL5, '.', CONS_CODBARBL6) AS CONS_CODBARBL6,
+			CONCAT( CONS_CODBARBL7, '.', CONS_CODBARBL8) AS CONS_CODBARBL8,
+			
+			CONCAT( 'R$ ', CONS_VALOR,'') CONS_VALOR,
+			CONS_STATUS
+			
+			from concessionarias WHERE CONS_DTA_VENC = '2023'
+			ORDER by CONS_DTM_VENC,CONS_DTA_VENC,CONS_DTD_VENC ";
+			$this->resultado = $this->con->banco->Execute($sql);
+		}					
+
+
+	}
+	
+?>

@@ -1,0 +1,152 @@
+@charset "utf-8";
+a:visited{ text-decoration:none; color:#fff;}
+a:link{ text-decoration:none; color:#fff;}
+
+.bordas{border-collapse:collapse; background-color:#fff; border-style: inset; border-color: #555;}
+
+.dia{color:#000; text-align:center; background-color:#036;}
+.diaover{color:#069; text-align:center; background-color:#069;}
+.mes{color:#000; text-align:center; background-color:#063;}
+.mesover{color:#069; text-align:center; background-color:#096;}
+.ano{color:#000;text-align:center; background-color:#930;}
+.anoover{color:#069; text-align:center; background-color:#960;}
+
+
+.LINK_EXCLUIR{color:#fff; text-align:center; background-color:#000;}
+.LINK_EXCLUIR_OVER{text-align:center; background-color:#555;}
+.LINK_ALTERAR{color:#fff;text-align:center; background-color:#000;}
+.LINK_ALTERAR_OVER{color:#FFF; text-align:center; background-color:#555;}
+.LINK_DETALHES{color:#fff; text-align:center; background-color:#000;}
+.LINK_DETALHES_OVER{text-align:center; background-color:#555;}
+
+.DADOS_DB{color:#000; text-align:center; background-color:#fff;}
+.DADOS_DB_OVER{color:#069; text-align:center; background-color:#fff;}
+
+
+.INDEX{
+	font-family:Times New Roman;
+	font-size:15px;
+	color:#000;
+	background-color:#EEE;
+	font-weight:bold;
+	text-align:left;
+	
+	width:800px;	
+	height:5px; 
+	padding:15px; 
+	float:CENTER;
+	
+	margin-top:10px; 
+	margin-bottom:10px;
+	margin-left:10px;
+	margin-right:10px;
+	
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+.TITULOS{
+	font-family:Times New Roman;
+	font-size:25px;
+	color:#000;
+	background-color:#EEE;
+	font-weight:bold;
+	text-align:left;
+	
+	width:1000px;
+	height:15px; 
+	padding:15px; 
+	float:left;
+	
+	margin-top:10px; 
+	margin-bottom:10px;
+	margin-left:10px;
+	margin-right:10px;
+	
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	border-left:0px solid #000;
+	border-right:0px solid #000;
+	
+}
+.MENU{
+	font-family:Times New Roman;
+	font-size:15px;
+	color:#000;
+	background-color:#EEE;
+	font-weight:bold;
+	text-align:left;
+	
+	width:800px;	
+	height:10px; 
+	padding:10px; 
+	float:center;
+	
+	margin-top:1px; 
+	margin-bottom:10px;
+	margin-left:10px;
+	margin-right:1px;
+	
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	
+}
+.TABELAS{
+	font-family:Times New Roman;
+	font-size:15px;
+	color:#000;
+	background-color:#fff;
+	font-weight:bold;
+	text-align:left;
+	
+	width:800px;	
+	height:15px; 
+	padding:15px; 
+	float:CENTER;
+	
+	margin-top:10px; 
+	margin-bottom:10px;
+	margin-left:10px;
+	margin-right:10px;
+	
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+}
+.DADOS_PERFIL{
+	font-family: Times New Roman;
+	font-size:15px;
+	color:#000;
+	background-color:#fff;
+	text-align:left;
+	border-bottom:1px solid #093 dashed ;
+	border:1px;
+}
+
+	width:155px;
+	height:250px; 
+	padding:10px; 
+	float:left;
+	
+	margin-top:10px; 
+	margin-bottom:2px;
+	margin-left:10px;
+	margin-right:10px;
+	
+	border-top:2px solid #aaa;
+	border-bottom:2px solid #aaa;
+	border-left:2px solid #aaa;
+	border-right:2px solid #aaa;
+	
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;	
+}
